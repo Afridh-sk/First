@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: powderblue;
+        }
+       
+        .quiz-container {
+
+            text-align: center;
+        }
+        .quiz-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: whitesmoke;
+            padding: 100px;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       
+        
+        button {
+           
+            margin-top: 70px;
+            padding: 10px 20px;
+            margin-right: 150px;
+            margin-left: 150px;
+            background-color: rgb(87, 150, 87);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+       
+        
+        button:hover {
+            background-color: rgb(7, 59, 7);
+        }
+        
+        #results {
+            margin-top: 20px;
+            font-weight: bold;
+            
+        }
+        
+        
+    </style>
+</head>
+<body>
+    
+    <div class="quiz-container">
+        <div id="quiz">
+        </div>
+       
+        <button id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+        <button id="next-btn" onclick="nextQuestion()">Next</button>
+        <div id="results" style="display: none;">
+            <h2>Quiz Results</h2>
+            <p id="score"></p>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVa6nUzGee04EhUPj9SdVjKMKk1cr4JdHS1g&usqp=CAU"width="150" height="200">
+        </div>
+    </div>
+    <script>
+        const quizData = [
+    {
+        question: "What is the capital of Turkey?",
+        answers: [
+            { option: "Ankara", correct: true },
+            { option: "Berlin", correct: false },
+            { option: "Madrid", correct: false },
+            { option: "Rome", correct: false }
+        ]
+    },
+    {
+        question: "Who is known as the “Father of Modern Physics?",
+        answers: [
+            { option: "Albert Einstein", correct: true },
+            { option: "Newton", correct: false },
+            { option: "J.J.Thomson", correct: false },
+            { option: "Edison", correct: false }
+        ]
+    },
+    {
+        question: "Which planet is known as the “Red Planet?",
+        answers: [
+            { option: "Mars", correct: true },
+            { option: "Jupiter", correct: false },
+            { option: "Saturn", correct: false },
+            { option: "Neptune", correct: false }
+        ]
+    },
+    {
+        question: "Which river is the longest in the world?",
+        answers: [
+            { option: "Amazon", correct: false },
+            { option: "Nile", correct: true },
+            { option: "Mississippi", correct: false },
+            { option: "Yangtze", correct: false }
+        ]
+    },
+    {
+        question: "What chemical element is designated as “Hg”?",
+        answers: [
+            { option: "Silver", correct: false },
+            { option: "Zinc", correct: false },
+            { option: "Mercury", correct: true },
+            { option: "Copper", correct: false }
+        ]
+    },
+    {
+        question: "Which one is the hottest continent?",
+        answers: [
+            { option: "Asia", correct: false },
+            { option: "SouthAmerica", correct: false },
+            { option: "Europe", correct: false },
+            { option: "Africa", correct: true }
+        ]
+    },
+    {
+        question: " Which planet in the solar system is known as the “Morning Star” or “Evening Star”?",
+        answers: [
+            { option: "Mars", correct: false },
+            { option: "Venus", correct: true },
+            { option: "Jupiter", correct: false },
+            { option: "Earth", correct: false }
+        ]
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const quizContainer = document.getElementById('quiz');
+const nextButton = document.getElementById('next-btn');
+const submitButton = document.getElementById('submit-btn');
+const resultsContainer = document.getElementById('results');
+const scoreDisplay = document.getElementById('score');
+
+
+
+function loadQuestion() {
+    const question = quizData[currentQuestion];
+    const questionText = `<h2>${question.question}</h2>`;
+    const options = question.answers.map((answer, index) => `
+        <label>
+            <input type="radio" name="question${currentQuestion}" value="${index}">
+            ${answer.option}
+        </label>
+    `).join('');
+
+    quizContainer.innerHTML = questionText + options;
+}
+
+function nextQuestion() {
+    const selectedOption = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
+    
+    if (!selectedOption) {
+        alert('Please select an option!');
+        return;
+    }
+    
+    const answerIndex = Number(selectedOption.value);
+    if (quizData[currentQuestion].answers[answerIndex].correct) {
+        score++;
+    }
+
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function submitQuiz() {
+    const selectedOption = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
+    if (selectedOption) {
+        const answerIndex = Number(selectedOption.value);
+        if (quizData[currentQuestion].answers[answerIndex].correct) {
+            score++;
+        }
+    }
+
+    currentQuestion = quizData.length;
+    showResults();
+}
+
+function showResults() {
+    quizContainer.style.display = 'none';
+    nextButton.style.display = 'none';
+    submitButton.style.display = 'none';
+    resultsContainer.style.display = 'block';
+
+    scoreDisplay.textContent = `You scored ${score} out of ${quizData.length} questions.`;
+}
+loadQuestion();
+
+    </script>
+</body>
+</html>
